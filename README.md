@@ -12,3 +12,4 @@
 - Use threads in place of processes for Concurrent Merge Sort. Add the performance comparison to the above report.
 **********
 **Solution**
+For Normal Merge Sort, the code works as per expectation (Trivial), but for the version of Merge Sort that works on spawning 2 processes in every mergeSort step recursively, the maximum input size for which mergeSort works is observed to be **2366** so far...
