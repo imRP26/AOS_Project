@@ -1,3 +1,4 @@
+#include <chrono>
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
@@ -92,7 +93,7 @@ void mergeSort(int array[], int low, int high) {
 
 int main() {
     const clock_t begin_time = clock();
-    int i, arraySize, minValue = 1, maxValue = 1e6, shmID, num;
+    int i, arraySize, maxValue = 1e6, shmID, num;
     key_t k = IPC_PRIVATE;
     int* shmArray;
     vector<int> v;
