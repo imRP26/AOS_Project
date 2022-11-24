@@ -13,7 +13,7 @@
 **********
 **Solution**
 <br>
-For Normal Merge Sort, the code works as per expectation (Trivial), but for the version of Merge Sort (named as **concurrentMergeSort** here) that works on spawning 2 processes in every mergeSort step recursively, the maximum input size for which concurrentMergeSort works is observed to be **2366** so far on MAC M1 and about **1.9*10^4** for Ubuntu.
+For **Normal Merge Sort**, the code works as per expectation (Trivial), but for the version of Merge Sort (named as **concurrentMergeSort** here) that works on spawning 2 processes in every mergeSort step recursively, the maximum input size for which concurrentMergeSort works is observed to be **2366** so far on MAC M1 and about **1.9*10^4** for Ubuntu.
 <br>
 From the [OSX Man Page for fork()](https://www.unix.com/man-page/osx/2/fork/), it has been mentioned :- 
 <br>
@@ -22,6 +22,7 @@ From the [OSX Man Page for fork()](https://www.unix.com/man-page/osx/2/fork/), i
 - **The system-imposed limit on the total number of processes under execution would be exceeded. This limit is configuration-dependent.**
 - **The system-imposed limit MAXUPRC (<sys/param.h>) on the total number of processes under execution by a single user would be exceeded.**
 - **There is insufficient swap space for the new process.**
-So the maximum input size for which concurrentMergeSort works depends on the hard limits of ulimit -u, i.e., on the  
-
-For multi-threaded Merge Sort, 
+Executing **ulimit -a** on the respective machines also gives us the hints (wrt hardlimits on **ulimit -u**) as to why fork() fails beyond a certain extent.  
+<br>
+<br>
+For **multithreaded Merge Sort**, threads are created recursively for the left and right partitions of the input array in the mergeSort procedure. The maximum array size for which it works is **21374** on MAC M1 and  about for Ubuntu.
