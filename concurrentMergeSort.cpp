@@ -1,5 +1,3 @@
-//#include <boost/random.hpp>
-//#include <boost/nondet_random.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
@@ -10,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <vector>
 using namespace std;
 
 
@@ -32,17 +31,17 @@ void selectionSort(int array[], int low, int high) {
 
 // Merge operation in Merge-Sorting
 void merge(int array[], int low, int mid, int high) {
-    int i = 0, j = 0, k = 0, num1 = mid - low + 1, num2 = high - mid;
+    int i = low, j = mid + 1, k = 0, num1 = mid - low + 1, num2 = high - mid;
     int tempArray[high - low + 1];
-    while (i < num1 && j < num2) {
+    while (i <= mid && j <= high) {
         if (array[i] < array[j])
             tempArray[k++] = array[i++];
         else
             tempArray[k++] = array[j++];
     }
-    while (i < num1)
+    while (i <= mid)
         tempArray[k++] = array[i++];
-    while (j < num2)
+    while (j <= high)
         tempArray[k++] = array[j++];
     for (i = low; i <= high; i++)
         array[i] = tempArray[i - low];
@@ -51,7 +50,6 @@ void merge(int array[], int low, int mid, int high) {
 
 // Merge-Sorting
 void mergeSort(int array[], int low, int high) {
-    
     // Default case
     if (low >= high)
         return;
@@ -93,13 +91,11 @@ void mergeSort(int array[], int low, int high) {
 
 
 int main() {
-
-    // Generic variable declaration and starting the clock
-    time_t startNow, endNow;
-    time(&startNow);
-    int i, arraySize, minValue = 1, maxValue = 1e6, shmID;
+    const clock_t begin_time = clock();
+    int i, arraySize, minValue = 1, maxValue = 1e6, shmID, num;
     key_t k = IPC_PRIVATE;
     int* shmArray;
+    vector<int> v;
     cin >> arraySize;
 
     // Calculating segment length and creating the segment
@@ -116,31 +112,24 @@ int main() {
     }
 
     // Assigning random numbers to the input array
-    
-    //unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-    //default_random_engine generator(seed);
-    //uniform_int_distribution<int> uniformDistribution(minValue, maxValue);
-    
-    //boost::random::random_device randomDevice;
-    //boost::random::mt19937 generator(randomDevice());
-    //boost::random::uniform_int_distribution<> uniformDistribution(minValue, maxValue);
-
-    random_device randomDevice;
-    mt19937 generator(randomDevice());
-    uniform_int_distribution<int> uniformDistribution(minValue, maxValue);
-    for (i = 0; i < arraySize; i++)
-        shmArray[i] = uniformDistribution(generator);
+    mt19937 rand(chrono::steady_clock::now().time_since_epoch().count());
+    for (i = 0; i < arraySize; i++) {
+        num = rand() % maxValue;
+        shmArray[i] = num;
+        v.push_back(num);
+    }
     
     // Crux of the question
     mergeSort(shmArray, 0, arraySize - 1);
     
     // Verification that the sorting actually happened
-    for (i = 1; i < arraySize; i++) {
-        cout << shmArray[i] << ' ';
-        if (shmArray[i] < shmArray[i - 1]) {
-            cout << "Still not sorted!!" << endl;
+    sort(v.begin(), v.end());
+    for (i = 0; i < arraySize; i++) {
+        if (v[i] != shmArray[i]) {
+            cout << v[i] << " != " << shmArray[i] << ", Sorting didn't happen correctly!!" << endl;
             exit(1);
         }
+        //cout << shmArray[i] << ' ';
     }
     cout << endl;
 
@@ -157,7 +146,5 @@ int main() {
     }
     
     // Calculating the time taken till mergesort completion
-    time(&endNow);
-    double timeTaken = double(endNow - startNow);
-    cout << "Time taken : " << fixed << timeTaken << setprecision(3) << " seconds." << endl;
+    cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;
 }

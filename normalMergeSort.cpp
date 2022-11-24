@@ -10,11 +10,12 @@
 #include <unistd.h>
 using namespace std;
 
+
 int* inputArray;
-int* array1;
-int* array2;
 const int selectionSortLimit = 5;
 
+
+// When partition size is < 5
 void selectionSort(int low, int high) {
     int minimumIndex, i, j;
     for (i = low; i <= high; i++) {
@@ -27,8 +28,11 @@ void selectionSort(int low, int high) {
     }
 }
 
+
+// Merging both the partitions
 void merge(int low, int mid, int high) {
     int num1 = mid - low + 1, num2 = high - mid, i, j, k;
+    int array1[num1], array2[num2];
     for (i = 0; i < num1; i++)
         array1[i] = inputArray[low + i];
     for (j = 0; j < num2; j++)
@@ -48,6 +52,8 @@ void merge(int low, int mid, int high) {
         inputArray[k++] = array2[j++];
 }
 
+
+// Merge Sort procedure
 void mergeSort(int low, int high) {
     if (low >= high)
         return;
@@ -61,22 +67,38 @@ void mergeSort(int low, int high) {
     merge(low, mid, high);
 }
 
+
 int main() {
-    time_t startNow, endNow;
-    time(&startNow);
-    int i, arraySize, minValue = 1, maxValue = 1e6;
+    // Generic variable declaration and starting the clock
+    const clock_t begin_time = clock();
+    int i, arraySize, minValue = 1, maxValue = 1e6, num;
     bool flag = 1;
+    vector<int> v;
     cin >> arraySize;
     inputArray = (int*)malloc(sizeof(int) * (arraySize + 1));
-    array1 = (int*)malloc(sizeof(int) * (arraySize + 1));
-    array2 = (int*)malloc(sizeof(int) * (arraySize + 1));
+    
+    // Assigning random numbers to the input array
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
     uniform_int_distribution<int> distribution(minValue, maxValue);
-    for (i = 0; i < arraySize; i++)
-        inputArray[i] = distribution(generator);
+    for (i = 0; i < arraySize; i++) {
+        num = distribution(generator);
+        v.push_back(num);
+        inputArray[i] = num;
+    }
+
+    // CRUX of the question
     mergeSort(0, arraySize - 1);
-    time(&endNow);
-    double timeTaken = double(endNow - startNow);
-    cout << "Time taken : " << fixed << timeTaken << setprecision(3) << " seconds." << endl;
+
+    // Sorting verification
+    sort(v.begin(), v.end());
+    for (i = 0; i < arraySize; i++) {
+        if (v[i] != inputArray[i]) {
+            cout << v[i] << " != " << inputArray[i] << ", not sorted!!" << endl;
+            exit(1);
+        }
+    }
+    
+    // Measuring the time elapsed
+    cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;
 }
