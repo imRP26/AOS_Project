@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
@@ -11,7 +12,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 
@@ -99,7 +99,7 @@ int main() {
     cin >> arraySize;
     tnode.rightIndex = arraySize - 1;
     inputArray = (int*)malloc(sizeof(int) * arraySize);
-
+    
     // Assigning random numbers to the input array
     mt19937 rand(chrono::steady_clock::now().time_since_epoch().count());
     for (i = 0; i < arraySize; i++) {
@@ -120,12 +120,11 @@ int main() {
     sort(v.begin(), v.end());
     for (i = 0; i < arraySize; i++) {
         if (v[i] != inputArray[i]) {
-            cout << v[i] << " != " << inputArray[i] << ", still not sorted!!";
+            cout << v[i] << " != " << inputArray[i] << ", still not sorted!!" << endl;
             exit(1);
         }
         //cout << inputArray[i] << ' ';
     }
-    cout << endl;
 
     // Calculating the time taken till mergesort completion
     cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;

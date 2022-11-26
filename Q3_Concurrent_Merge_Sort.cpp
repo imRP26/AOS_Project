@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
@@ -9,7 +10,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <algorithm>
 #include <vector>
 using namespace std;
 
@@ -133,7 +133,6 @@ int main() {
         }
         //cout << shmArray[i] << ' ';
     }
-    cout << endl;
 
     // Detatching from the shared memory
     if (shmdt(shmArray) == -1) {
