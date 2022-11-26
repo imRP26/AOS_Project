@@ -21,3 +21,8 @@
 - Next the student washes his utensils for the required number of seconds.
 - The above steps are repeated for all three utensils after which the student unlocks the tap.
 - There are logs showing which student is currently performing what action and the time when a student finishes washing all utensils is also printed.
+
+<b> Running the code </b>
+- Compile using ```g++ q2_dish_washing.cpp -lpthread -lrt```
+- Run using ```./a.out n m``` where n is the number of taps and m is the number of students.
+
