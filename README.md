@@ -1,5 +1,5 @@
 # AOS_Project
-AOS Project for Problems on Process Co-ordination
+AOS Project for 6. Problems on Process Co-ordination
 *************************************************
 Contributors :-
 <br>
