@@ -17,5 +17,9 @@
 - After finishing reading the article, the semaphore is unlocked and other editors can read it if it has been rejected.
 - Logs have been used to see which editor has picked up which article and whether the article has been accepted.
 
+<b> Running the code </b>
+- Compile using ```g++ q1_editors_reporters.cpp -lpthread -lrt```
+- Run using ```./a.out n m``` where n is the number of editors and m is the number of articles.
+
 
 
