@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
@@ -8,12 +9,15 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <algorithm>
+#include <vector>
 using namespace std;
 
 
 int* inputArray;
+int* array1;
+int* array2;
 const int selectionSortLimit = 5;
+vector<int> v;
 
 
 // When partition size is < 5
@@ -33,7 +37,6 @@ void selectionSort(int low, int high) {
 // Merging both the partitions
 void merge(int low, int mid, int high) {
     int num1 = mid - low + 1, num2 = high - mid, i, j, k;
-    int array1[num1], array2[num2];
     for (i = 0; i < num1; i++)
         array1[i] = inputArray[low + i];
     for (j = 0; j < num2; j++)
@@ -74,9 +77,10 @@ int main() {
     const clock_t begin_time = clock();
     int i, arraySize, minValue = 1, maxValue = 1e6, num;
     bool flag = 1;
-    vector<int> v;
     cin >> arraySize;
     inputArray = (int*)malloc(sizeof(int) * (arraySize + 1));
+    array1 = (int*)malloc(sizeof(int) * (arraySize + 1));
+    array2 = (int*)malloc(sizeof(int) * (arraySize + 1));
     
     // Assigning random numbers to the input array
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
