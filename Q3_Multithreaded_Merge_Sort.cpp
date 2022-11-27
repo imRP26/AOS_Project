@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
@@ -12,6 +11,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+#include <algorithm>
+using namespace std::chrono;
 using namespace std;
 
 
@@ -90,7 +91,6 @@ void* mergeSort(void* temp) {
 
 int main() {
     // Generic variable declaration
-    const clock_t begin_time = clock();
     int i, arraySize, maxValue = 1e6, shmID, num, threadReturnValue;
     vector<int> v;
     pthread_t tid;
@@ -99,7 +99,7 @@ int main() {
     cin >> arraySize;
     tnode.rightIndex = arraySize - 1;
     inputArray = (int*)malloc(sizeof(int) * arraySize);
-    
+
     // Assigning random numbers to the input array
     mt19937 rand(chrono::steady_clock::now().time_since_epoch().count());
     for (i = 0; i < arraySize; i++) {
@@ -108,24 +108,32 @@ int main() {
         v.push_back(num);
     }
 
+    auto start = high_resolution_clock::now();
+
     // creating thread
     threadReturnValue = pthread_create(&tid, NULL, mergeSort, &tnode);
+
     if (threadReturnValue) {
         cout << "Error in creating thread!!" << endl;
         exit(1);
     }
     pthread_join(tid, NULL);
 
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    double duration_seconds = (double)duration.count()/1000;
+
     // Sorting verification
     sort(v.begin(), v.end());
     for (i = 0; i < arraySize; i++) {
         if (v[i] != inputArray[i]) {
-            cout << v[i] << " != " << inputArray[i] << ", still not sorted!!" << endl;
+            cout << v[i] << " != " << inputArray[i] << ", still not sorted!!";
             exit(1);
         }
         //cout << inputArray[i] << ' ';
     }
+    cout << endl;
 
     // Calculating the time taken till mergesort completion
-    cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;
+    cout << "Time elapsed : " << duration_seconds << " seconds." << endl;
 }
