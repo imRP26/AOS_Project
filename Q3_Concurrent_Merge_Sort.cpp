@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+using namespace std::chrono;
 using namespace std;
 
 
@@ -33,7 +34,7 @@ void selectionSort(int array[], int low, int high) {
 
 // Merge operation in Merge-Sorting
 void merge(int array[], int low, int mid, int high) {
-    int i = low, j = mid + 1, k = 0, num1 = mid - low + 1, num2 = high - mid;
+    int i = low, j = mid + 1, k = 0;
     int tempArray[high - low + 1];
     while (i <= mid && j <= high) {
         if (array[i] < array[j])
@@ -93,7 +94,8 @@ void mergeSort(int array[], int low, int high) {
 
 
 int main() {
-    const clock_t begin_time = clock();
+    
+    // const clock_t begin_time = clock();
     int i, arraySize, maxValue = 1e6, shmID, num;
     key_t k = IPC_PRIVATE;
     int* shmArray;
@@ -121,8 +123,14 @@ int main() {
         v.push_back(num);
     }
     
+    auto start = high_resolution_clock::now();
+
     // Crux of the question
     mergeSort(shmArray, 0, arraySize - 1);
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    double duration_seconds = (double)duration.count()/1000;
     
     // Verification that the sorting actually happened
     sort(v.begin(), v.end());
@@ -133,6 +141,7 @@ int main() {
         }
         //cout << shmArray[i] << ' ';
     }
+    cout << endl;
 
     // Detatching from the shared memory
     if (shmdt(shmArray) == -1) {
@@ -147,5 +156,5 @@ int main() {
     }
     
     // Calculating the time taken till mergesort completion
-    cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;
+    cout << "Time elapsed : " << duration_seconds << " seconds." << endl;
 }
