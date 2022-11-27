@@ -10,6 +10,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+#include <chrono>
+using namespace std::chrono;
 using namespace std;
 
 
@@ -92,8 +94,14 @@ int main() {
         inputArray[i] = num;
     }
 
+    auto start = high_resolution_clock::now();
+
     // CRUX of the question
     mergeSort(0, arraySize - 1);
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    double duration_seconds = (double)duration.count()/1000;
 
     // Sorting verification
     sort(v.begin(), v.end());
@@ -105,5 +113,5 @@ int main() {
     }
     
     // Measuring the time elapsed
-    cout << "Time elapsed : " << float( clock () - begin_time ) /  CLOCKS_PER_SEC << " seconds." << endl;
+    cout << "Time elapsed : " << duration_seconds << " seconds." << endl;
 }
